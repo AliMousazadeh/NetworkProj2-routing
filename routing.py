@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 
 
 class Router():
@@ -8,7 +9,6 @@ class Router():
         self.links = links
 
     def printLinks(self):
-        print(self.subnet)
         numLinks = len(self.links)
         for i in range(numLinks):
             print(self.links[i][0] + "-" + self.links[i][1])
@@ -36,3 +36,14 @@ while True:
 
     routers[router1Index].links.append([router2Subnet, dist])
     routers[router2Index].links.append([router1Subnet, dist])
+
+rows, cols = (len(routers), len(routers))
+distanceGraph = [[0 for i in range(cols)] for j in range(rows)]
+for i in range(rows):
+    for j in range(cols):
+        if routers[j].subnet in [link[0] for link in routers[i].links]:
+            index = [link[0]
+                     for link in routers[i].links].index(routers[j].subnet)
+            distanceGraph[i][j] = routers[i].links[index][1]
+        else:
+            distanceGraph[i][j] = 0
