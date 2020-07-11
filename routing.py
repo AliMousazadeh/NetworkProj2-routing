@@ -32,7 +32,7 @@ class Graph():
         return min_index
 
     def dijkstra(self, src):
-        self.shortestPath = [[] for rows in range(self.V)]
+        shortestPath = [[] for rows in range(self.V)]
 
         dist = [sys.maxsize] * self.V
         dist[src] = 0
@@ -49,7 +49,8 @@ class Graph():
                         sptSet[v] == False and \
                         dist[v] > dist[u] + self.graph[u][v]:
                     dist[v] = dist[u] + self.graph[u][v]
-                    self.shortestPath[v].append(u)
+                    shortestPath[v].append(u)
+        return shortestPath
 
 
 routerSubnets = []
@@ -90,5 +91,20 @@ for i in range(rows):
 g = Graph(len(routers))
 g.graph = distanceGraph
 
-g.dijkstra(0)
-print(g.shortestPath)
+for i in range(len(routers)):
+    routers[i].routingTable = g.dijkstra(i)
+
+startEndInput = input()
+packetLocation, packetDestination = startEndInput.split("-")
+
+plannedPath = routers[routerSubnets.index(
+    packetLocation)].routingTable[routerSubnets.index(
+        packetDestination)]
+plannedPath.append(routerSubnets.index(
+    packetDestination))
+
+plannedPathAddresses = []
+for i in range(len(plannedPath)):
+    plannedPathAddresses.append(routerSubnets[plannedPath[i]])
+
+print(plannedPathAddresses)
