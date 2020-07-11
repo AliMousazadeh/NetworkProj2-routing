@@ -14,19 +14,25 @@ class Router():
             print(self.links[i][0] + "-" + self.links[i][1])
 
 
-# number of subnets
-numRouters = int(input())
+routerSubnets = []
 routers = []
-for i in range(numRouters):
-    # ith subnet
-    subnet = input()
-    # number of links for ith subnet
-    numLinks = int(input())
-    rows, cols = (numLinks, 2)
-    links = [[0 for k in range(cols)] for t in range(rows)]
-    for j in range(numLinks):
-        # ith link and distance
-        iLink = input()
-        links[j][0], links[j][1] = iLink.split("-")
-    routers.append(Router(subnet, links))
-    print()
+links = []
+userInput = []
+while True:
+    userInput = input()
+    if (userInput == 'eoi'):
+        break
+    router1Subnet, router2Subnet, dist = userInput.split("-")
+
+    if router1Subnet not in routerSubnets:
+        routerSubnets.append(router1Subnet)
+        routers.append(Router(router1Subnet, []))
+    if router2Subnet not in routerSubnets:
+        routerSubnets.append(router2Subnet)
+        routers.append(Router(router2Subnet, []))
+
+    router1Index = routerSubnets.index(router1Subnet)
+    router2Index = routerSubnets.index(router2Subnet)
+
+    routers[router1Index].links.append([router2Subnet, dist])
+    routers[router2Index].links.append([router1Subnet, dist])
